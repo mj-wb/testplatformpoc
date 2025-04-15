@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneStop Retailer Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://clerk.browser.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+</head>
+<body>
+    <div class="container dashboard-container">
+        <!-- Auth Container (shown before login) -->
+        <div id="auth-container" class="auth-container">
+            <div class="auth-box">
+                <h1>OneStop Retailer</h1>
+                <p>Sign in to access your dashboard</p>
+                <div id="clerk-sign-in"></div>
+            </div>
+        </div>
+
+        <!-- Dashboard Container (shown after login) -->
+        <div id="dashboard" class="hidden">
+            <header class="dashboard-header">
+                <h1>OneStop Retailer Dashboard</h1>
+                <div class="user-info">
+                    <span id="store-name-header">Store Name</span>
+                    <button id="sign-out-btn" class="text-btn">Sign Out</button>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="dashboard-tabs">
+                    <button class="tab-button active" data-tab="checkins">Current Check-ins</button>
+                    <button class="tab-button" data-tab="scanner">Scan Shopper</button>
+                    <button class="tab-button" data-tab="store-qr">Store QR Code</button>
+                </div>
+
+                <!-- Current Check-ins Tab -->
+                <div class="tab-content active" id="checkins-tab">
+                    <h2>Current Shoppers</h2>
+                    <div class="shoppers-list" id="shoppers-list">
+                        <div class="empty-state">
+                            <p>No shoppers currently checked in.</p>
+                            <p>You can scan a shopper's QR code or they can scan your store's QR code to check in.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scanner Tab -->
+                <div class="tab-content" id="scanner-tab">
+                    <h2>Scan Shopper QR Code</h2>
+                    <div class="scanner-container">
+                        <div id="retailer-scanner-frame"></div>
+                        <button id="start-retailer-scanner" class="submit-btn">Start Scanner</button>
+                        <button id="stop-retailer-scanner" class="secondary-btn hidden">Cancel</button>
+                    </div>
+                    <div id="scan-result" class="confirmation-message hidden">
+                        Shopper checked in successfully!
+                    </div>
+                </div>
+
+                <!-- Store QR Tab -->
+                <div class="tab-content" id="store-qr-tab">
+                    <h2>Your Store QR Code</h2>
+                    <p>Place this at your entrance for shoppers to scan and check in</p>
+                    <div id="store-qr-container" class="qr-code-container"></div>
+                    <button id="download-store-qr" class="submit-btn">Download for Printing</button>
+                </div>
+            </div>
+
+            <!-- Shopper Profile Modal -->
+            <div id="shopper-profile-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h2>Shopper Profile</h2>
+                    <div id="profile-content">
+                        <!-- Profile content will be filled dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html> 

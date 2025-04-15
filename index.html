@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneStop Onboarding</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://clerk.browser.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="auth-container" class="auth-container">
+            <div class="auth-box">
+                <h1>OneStop</h1>
+                <p>Sign in to create your profile or access your dashboard</p>
+                <div id="clerk-sign-in"></div>
+                <p class="auth-note">No password needed - we'll send you a magic link!</p>
+            </div>
+        </div>
+
+        <div id="app-container" class="app-container hidden">
+            <header>
+                <h1>OneStop</h1>
+                <div class="user-info">
+                    <span id="user-name">Welcome</span>
+                    <button id="sign-out-btn" class="text-btn">Sign Out</button>
+                </div>
+                <div class="form-toggle">
+                    <button id="shopper-toggle" class="active">Shopper Profile</button>
+                    <button id="retailer-toggle">Retailer Profile</button>
+                </div>
+            </header>
+
+            <main>
+                <!-- Shopper Profile Form -->
+                <form id="shopper-form" class="form-section active">
+                    <h2>Create Your Shopper Profile</h2>
+                    
+                    <div class="form-group">
+                        <label for="shopper-name">Full Name</label>
+                        <input type="text" id="shopper-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="shopper-email">Email Address</label>
+                        <input type="email" id="shopper-email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="shopping-department">Shopping Department</label>
+                        <select id="shopping-department" required>
+                            <option value="" disabled selected>Select department</option>
+                            <option value="Womenswear">Womenswear</option>
+                            <option value="Menswear">Menswear</option>
+                            <option value="All">All</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group sizes-section">
+                        <h3>Clothing Sizes</h3>
+                        <p class="size-guide-link"><a href="#" id="open-size-guide">View Size Guide</a></p>
+                        
+                        <div class="size-group">
+                            <label for="tops-size">Tops</label>
+                            <select id="tops-size" required>
+                                <option value="" disabled selected>Select size</option>
+                                <option value="XXS">XXS</option>
+                                <option value="XS">XS</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                                <option value="XXXL">XXXL</option>
+                            </select>
+                        </div>
+                        
+                        <div class="size-group">
+                            <label for="bottoms-size">Bottoms</label>
+                            <select id="bottoms-size" required>
+                                <option value="" disabled selected>Select size</option>
+                                <option value="XXS">XXS</option>
+                                <option value="XS">XS</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                                <option value="XXXL">XXXL</option>
+                            </select>
+                        </div>
+                        
+                        <div class="size-group">
+                            <label for="outerwear-size">Outerwear</label>
+                            <select id="outerwear-size" required>
+                                <option value="" disabled selected>Select size</option>
+                                <option value="XXS">XXS</option>
+                                <option value="XS">XS</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                                <option value="XXXL">XXXL</option>
+                            </select>
+                        </div>
+                        
+                        <div class="size-group" id="dresses-group">
+                            <label for="dresses-size">Dresses</label>
+                            <select id="dresses-size">
+                                <option value="" disabled selected>Select size</option>
+                                <option value="XXS">XXS</option>
+                                <option value="XS">XS</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                                <option value="XXXL">XXXL</option>
+                            </select>
+                        </div>
+                        
+                        <div class="size-group">
+                            <label for="footwear-size">Footwear</label>
+                            <select id="footwear-size" required>
+                                <option value="" disabled selected>Select size (US)</option>
+                                <option value="4">US 4</option>
+                                <option value="4.5">US 4.5</option>
+                                <option value="5">US 5</option>
+                                <option value="5.5">US 5.5</option>
+                                <option value="6">US 6</option>
+                                <option value="6.5">US 6.5</option>
+                                <option value="7">US 7</option>
+                                <option value="7.5">US 7.5</option>
+                                <option value="8">US 8</option>
+                                <option value="8.5">US 8.5</option>
+                                <option value="9">US 9</option>
+                                <option value="9.5">US 9.5</option>
+                                <option value="10">US 10</option>
+                                <option value="10.5">US 10.5</option>
+                                <option value="11">US 11</option>
+                                <option value="11.5">US 11.5</option>
+                                <option value="12">US 12</option>
+                                <option value="12.5">US 12.5</option>
+                                <option value="13">US 13</option>
+                                <option value="13.5">US 13.5</option>
+                                <option value="14">US 14</option>
+                                <option value="14.5">US 14.5</option>
+                                <option value="15">US 15</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fit-preference">Fit Preference</label>
+                        <select id="fit-preference" required>
+                            <option value="" disabled selected>Select preference</option>
+                            <option value="Slim">Slim</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Relaxed">Relaxed</option>
+                            <option value="Oversized">Oversized</option>
+                            <option value="Tailored">Tailored</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Proportional Preferences (optional)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="proportional-prefs" value="Petite"> Petite
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="proportional-prefs" value="Tall"> Tall
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="proportional-prefs" value="Plus"> Plus
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="proportional-prefs" value="Maternity"> Maternity
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="proportional-prefs" value="None"> None
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Color Preferences</label>
+                        <div class="color-picker">
+                            <div class="color-option" data-color="Black">
+                                <div class="color-swatch" style="background-color: #000000;"></div>
+                                <span>Black</span>
+                            </div>
+                            <div class="color-option" data-color="Blue">
+                                <div class="color-swatch" style="background-color: #2196F3;"></div>
+                                <span>Blue</span>
+                            </div>
+                            <div class="color-option" data-color="Brown">
+                                <div class="color-swatch" style="background-color: #795548;"></div>
+                                <span>Brown</span>
+                            </div>
+                            <div class="color-option" data-color="Green">
+                                <div class="color-swatch" style="background-color: #4CAF50;"></div>
+                                <span>Green</span>
+                            </div>
+                            <div class="color-option" data-color="Grey">
+                                <div class="color-swatch" style="background-color: #9E9E9E;"></div>
+                                <span>Grey</span>
+                            </div>
+                            <div class="color-option" data-color="Neutrals">
+                                <div class="color-swatch" style="background-color: #E1D7C6;"></div>
+                                <span>Neutrals</span>
+                            </div>
+                            <div class="color-option" data-color="Pink">
+                                <div class="color-swatch" style="background-color: #E91E63;"></div>
+                                <span>Pink</span>
+                            </div>
+                            <div class="color-option" data-color="Red">
+                                <div class="color-swatch" style="background-color: #F44336;"></div>
+                                <span>Red</span>
+                            </div>
+                            <div class="color-option" data-color="White">
+                                <div class="color-swatch" style="background-color: #FFFFFF; border: 1px solid #ddd;"></div>
+                                <span>White</span>
+                            </div>
+                            <div class="color-option" data-color="Yellow">
+                                <div class="color-swatch" style="background-color: #FFEB3B;"></div>
+                                <span>Yellow</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="budget-range">Budget Range</label>
+                        <select id="budget-range" required>
+                            <option value="" disabled selected>Select budget</option>
+                            <option value="<$100">Less than $100</option>
+                            <option value="$100-$300">$100 – $300</option>
+                            <option value="$300+">$300+</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Shopping Values</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="shopping-values" value="Sustainability"> Sustainability
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="shopping-values" value="Local Brands"> Local Brands
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="shopping-values" value="Ethical Materials"> Ethical Materials
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="shopping-values" value="Other"> Other
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="style-words">Style in 3 Words</label>
+                        <input type="text" id="style-words" placeholder="e.g., Modern, Minimalist, Bold" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="shopper-feedback">What would make shopping feel more 'you'?</label>
+                        <textarea id="shopper-feedback" rows="4" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Submit Profile</button>
+                    
+                    <div id="shopper-confirmation" class="confirmation-message">
+                        Thanks! Your profile has been saved.
+                    </div>
+                </form>
+
+                <!-- Retailer Profile Form -->
+                <form id="retailer-form" class="form-section">
+                    <h2>Create Your Retailer Profile</h2>
+                    
+                    <div class="form-group">
+                        <label for="store-name">Store Name</label>
+                        <input type="text" id="store-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-person">Contact Person</label>
+                        <input type="text" id="contact-person" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-email">Contact Email</label>
+                        <input type="email" id="contact-email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="store-location">Location</label>
+                        <input type="text" id="store-location" placeholder="City or suburb" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="store-type">Store Type</label>
+                        <select id="store-type" required>
+                            <option value="" disabled selected>Select store type</option>
+                            <option value="Boutique">Boutique</option>
+                            <option value="Multi-brand">Multi-brand</option>
+                            <option value="DTC">DTC</option>
+                            <option value="Online-to-Offline">Online-to-Offline</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="store-size">Store Size (optional)</label>
+                        <input type="text" id="store-size" placeholder="e.g., 1000 sq ft or 5 employees">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="retailer-feedback">What would you love to personalise more in-store?</label>
+                        <textarea id="retailer-feedback" rows="4" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Submit Profile</button>
+                    
+                    <div id="retailer-confirmation" class="confirmation-message">
+                        Thanks! A team member will be in touch soon.
+                    </div>
+                </form>
+
+                <!-- After successful profile submission -->
+                <div id="qr-code-section" class="qr-code-section">
+                    <h3>Your OneStop QR Code</h3>
+                    <p>Use this to check in at retail stores</p>
+                    <div id="qr-code-container" class="qr-code-container"></div>
+                    <button id="download-qr" class="submit-btn">Download QR Code</button>
+                    <button id="view-check-in" class="secondary-btn">Check In to Store</button>
+                </div>
+
+                <!-- QR Scanner section -->
+                <div id="scanner-section" class="form-section">
+                    <h2>Check In to Store</h2>
+                    <p>Scan the store's QR code to check in</p>
+                    
+                    <div class="scanner-container">
+                        <div id="scanner-frame"></div>
+                        <button id="start-scanner" class="submit-btn">Start Scanner</button>
+                        <button id="stop-scanner" class="secondary-btn">Cancel</button>
+                    </div>
+                    
+                    <div id="check-in-result" class="confirmation-message">
+                        You've checked in to <span id="store-name-display"></span>!
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="qrcode.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
