@@ -152,7 +152,21 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem(`onestop_profile_${userProfile.id}`, JSON.stringify(shopperData));
         
         // Send form data to Make.com webhook for Google Sheets storage
-        console.log('Shopper data submitted:', shopperData);
+        fetch('YOUR_SHOPPER_WEBHOOK_URL', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(shopperData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => console.log('Success:', data))
+        .catch(error => console.error('Error sending data to webhook:', error));
         
         // Show confirmation message
         shopperConfirmation.style.display = 'block';
@@ -197,7 +211,21 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem(`onestop_profile_${userProfile.id}`, JSON.stringify(retailerData));
         
         // Send form data to Make.com webhook for Google Sheets storage
-        console.log('Retailer data submitted:', retailerData);
+        fetch('YOUR_RETAILER_WEBHOOK_URL', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(retailerData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => console.log('Success:', data))
+        .catch(error => console.error('Error sending data to webhook:', error));
         
         // Show confirmation message
         retailerConfirmation.style.display = 'block';
