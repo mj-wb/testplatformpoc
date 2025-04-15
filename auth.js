@@ -1,24 +1,22 @@
 // Initialize Clerk with your publishable key
-const clerkPublishableKey = 'pk_test_REPLACE_WITH_ACTUAL_KEY';
+const clerkPublishableKey = 'pk_test_Y2F1c2FsLW1hc3RpZmYtOTguY2xlcmsuYWNjb3VudHMuZGV2JA';
 let userProfile = null;
 
 // Initialize Clerk
 async function initializeClerk() {
-    const Clerk = window.Clerk;
+    // Wait for Clerk to be available
+    if (document.readyState !== 'complete') {
+        window.addEventListener('load', initializeClerk);
+        return;
+    }
     
     try {
-        await Clerk.load({
-            publishableKey: clerkPublishableKey
-        });
-
-        // Mount sign-in component
-        const signInDiv = document.getElementById('clerk-sign-in');
-        if (signInDiv) {
-            Clerk.mountSignIn(signInDiv);
-        }
-
-        // Add auth state change listener
-        Clerk.addListener(({ user }) => {
+        console.log("Initializing Clerk...");
+        console.log("Clerk object available:", !!window.Clerk);
+        
+        // The key is already set via the script tag, no need to pass it again
+        // Just wait for Clerk to be ready
+        window.Clerk.addListener(({ user }) => {
             if (user) {
                 // User is signed in
                 handleSignedIn(user);
@@ -28,9 +26,15 @@ async function initializeClerk() {
             }
         });
 
+        // Mount sign-in component
+        const signInDiv = document.getElementById('clerk-sign-in');
+        if (signInDiv) {
+            window.Clerk.mountSignIn(signInDiv);
+        }
+
         // Handle sign out button
         document.getElementById('sign-out-btn')?.addEventListener('click', () => {
-            Clerk.signOut();
+            window.Clerk.signOut();
         });
 
     } catch (error) {
