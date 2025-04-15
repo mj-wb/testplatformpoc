@@ -6,44 +6,66 @@ let userProfile = null;
 document.addEventListener('DOMContentLoaded', function() {
     console.log("Document ready, checking for Clerk...");
     
-    // Create an interval to check for Clerk until it's available
-    const clerkCheck = setInterval(function() {
-        console.log("Checking for Clerk...");
-        if (window.Clerk) {
-            console.log("Clerk found!");
-            clearInterval(clerkCheck);
-            
-            // Once Clerk is available
-            const signInDiv = document.getElementById('clerk-sign-in');
-            if (signInDiv) {
-                console.log("Mounting sign-in component...");
-                window.Clerk.mountSignIn(signInDiv);
+    // Wait longer for Clerk to initialize
+    const waitForClerk = () => {
+        return new Promise((resolve, reject) => {
+            if (window.Clerk) {
+                resolve(window.Clerk);
+                return;
             }
             
-            // Set up user state change listener
-            window.Clerk.addListener(({ user }) => {
-                console.log("Auth state changed:", user ? "signed in" : "signed out");
-                if (user) {
-                    // User is signed in
-                    handleSignedIn(user);
-                } else {
-                    // User is signed out
-                    handleSignedOut();
+            // Wait for Clerk to load
+            let attempts = 0;
+            const check = setInterval(() => {
+                attempts++;
+                console.log(`Waiting for Clerk... Attempt ${attempts}`);
+                
+                if (window.Clerk) {
+                    clearInterval(check);
+                    console.log("Clerk found!");
+                    resolve(window.Clerk);
+                } else if (attempts > 50) { // Try for 25 seconds
+                    clearInterval(check);
+                    reject(new Error("Clerk failed to load after 25 seconds"));
                 }
-            });
-            
-            // Handle sign out
-            document.getElementById('sign-out-btn')?.addEventListener('click', () => {
-                window.Clerk.signOut();
-            });
-        }
-    }, 500); // Check every 500ms
+            }, 500);
+        });
+    };
     
-    // Safety timeout after 10 seconds
-    setTimeout(() => {
-        clearInterval(clerkCheck);
-        console.error("Clerk failed to load after 10 seconds");
-    }, 10000);
+    // Try to initialize
+    waitForClerk()
+        .then(clerk => {
+            // Only try to mount components when we're sure Clerk is fully loaded
+            setTimeout(() => {
+                try {
+                    console.log("Mounting sign-in component...");
+                    const signInDiv = document.getElementById('clerk-sign-in');
+                    if (signInDiv) {
+                        clerk.mountSignIn(signInDiv);
+                    }
+                    
+                    // Set up listener after mounting
+                    clerk.addListener(({ user }) => {
+                        console.log("Auth state changed:", user ? "signed in" : "signed out");
+                        if (user) {
+                            handleSignedIn(user);
+                        } else {
+                            handleSignedOut();
+                        }
+                    });
+                    
+                    // Handle sign out
+                    document.getElementById('sign-out-btn')?.addEventListener('click', () => {
+                        clerk.signOut();
+                    });
+                } catch (e) {
+                    console.error("Error mounting Clerk components:", e);
+                }
+            }, 1000); // Give a little extra time after Clerk is found
+        })
+        .catch(error => {
+            console.error(error);
+        });
 });
 
 // Handle signed in state
