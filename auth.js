@@ -2,45 +2,49 @@
 const clerkPublishableKey = 'pk_test_Y2F1c2FsLW1hc3RpZmYtOTguY2xlcmsuYWNjb3VudHMuZGV2JA';
 let userProfile = null;
 
-// Initialize Clerk
-async function initializeClerk() {
-    // Wait for Clerk to be available
-    if (document.readyState !== 'complete') {
-        window.addEventListener('load', initializeClerk);
-        return;
-    }
+// Simplified Clerk initialization
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Document ready, checking for Clerk...");
     
-    try {
-        console.log("Initializing Clerk...");
-        console.log("Clerk object available:", !!window.Clerk);
-        
-        // The key is already set via the script tag, no need to pass it again
-        // Just wait for Clerk to be ready
-        window.Clerk.addListener(({ user }) => {
-            if (user) {
-                // User is signed in
-                handleSignedIn(user);
-            } else {
-                // User is signed out
-                handleSignedOut();
+    // Create an interval to check for Clerk until it's available
+    const clerkCheck = setInterval(function() {
+        console.log("Checking for Clerk...");
+        if (window.Clerk) {
+            console.log("Clerk found!");
+            clearInterval(clerkCheck);
+            
+            // Once Clerk is available
+            const signInDiv = document.getElementById('clerk-sign-in');
+            if (signInDiv) {
+                console.log("Mounting sign-in component...");
+                window.Clerk.mountSignIn(signInDiv);
             }
-        });
-
-        // Mount sign-in component
-        const signInDiv = document.getElementById('clerk-sign-in');
-        if (signInDiv) {
-            window.Clerk.mountSignIn(signInDiv);
+            
+            // Set up user state change listener
+            window.Clerk.addListener(({ user }) => {
+                console.log("Auth state changed:", user ? "signed in" : "signed out");
+                if (user) {
+                    // User is signed in
+                    handleSignedIn(user);
+                } else {
+                    // User is signed out
+                    handleSignedOut();
+                }
+            });
+            
+            // Handle sign out
+            document.getElementById('sign-out-btn')?.addEventListener('click', () => {
+                window.Clerk.signOut();
+            });
         }
-
-        // Handle sign out button
-        document.getElementById('sign-out-btn')?.addEventListener('click', () => {
-            window.Clerk.signOut();
-        });
-
-    } catch (error) {
-        console.error('Error initializing Clerk:', error);
-    }
-}
+    }, 500); // Check every 500ms
+    
+    // Safety timeout after 10 seconds
+    setTimeout(() => {
+        clearInterval(clerkCheck);
+        console.error("Clerk failed to load after 10 seconds");
+    }, 10000);
+});
 
 // Handle signed in state
 function handleSignedIn(user) {
@@ -90,5 +94,4 @@ async function checkProfileStatus(userId) {
     }
 }
 
-// Initialize Clerk when DOM is ready
-document.addEventListener('DOMContentLoaded', initializeClerk); 
+// Initialize Clerk when DOM is ready 
